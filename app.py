@@ -104,3 +104,30 @@ def render_exchange_analysis():
 # 執行頁面
 if __name__ == "__main__":
     render_exchange_analysis()
+
+# ----------- 🗺️ 地理分布圖 (出現次數 by 城市) -----------
+
+import plotly.express as px
+
+# 假設你有這份資料
+location_df = pd.DataFrame({
+    "城市": ["北京", "上海", "廣州", "成都", "武漢", "南京"],
+    "出現次數": [120, 180, 95, 210, 260, 80],
+    "lat": [39.9042, 31.2304, 23.1291, 30.5728, 30.5928, 32.0603],
+    "lon": [116.4074, 121.4737, 113.2644, 104.0668, 114.3055, 118.7969]
+})
+
+st.markdown("### 🗺️ 城市出現次數地圖")
+fig_geo = px.scatter_geo(
+    location_df,
+    lat="lat",
+    lon="lon",
+    size="出現次數",
+    color="出現次數",
+    color_continuous_scale="Reds",
+    projection="natural earth",
+    hover_name="城市"
+)
+fig_geo.update_geos(fitbounds="locations", visible=False)
+fig_geo.update_layout(height=500, coloraxis_colorbar=dict(title="出現次數"))
+st.plotly_chart(fig_geo, use_container_width=True)
